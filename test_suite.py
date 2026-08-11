@@ -1,5 +1,6 @@
 import unittest
 from agent import SimpleReflexAgent, ModelBasedAgent, SearchAgent
+from visual_grid_game import VisualGridHuntGame
 
 
 class TestPractical1And2_ReflexAgents(unittest.TestCase):
@@ -44,6 +45,20 @@ class TestPractical1And2_ReflexAgents(unittest.TestCase):
             action_2,
             "ModelBasedAgent returned the exact same action twice in a row for the same percept. Internal state/memory is not working correctly."
         )
+
+
+class TestVisualGridPercepts(unittest.TestCase):
+    def test_local_percept_uses_facing_direction(self):
+        env = VisualGridHuntGame(width=4, height=4, num_food=0, num_opponents=0, custom_walls={(0, 1)})
+        env.agent_pos = [0, 0]
+        env.agent_direction = 'Up'
+
+        percept = env.get_percept()
+
+        self.assertIn('wall_ahead', percept)
+        self.assertIn('food_here', percept)
+        self.assertTrue(percept['wall_ahead'])
+        self.assertFalse(percept['food_here'])
 
 
 class TestPractical3_SearchAgent(unittest.TestCase):
